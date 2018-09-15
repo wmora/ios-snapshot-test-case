@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 
 #import <FBSnapshotTestCase/FBSnapshotTestCasePlatform.h>
+#import <XCTest/XCTest.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -100,7 +101,7 @@ extern NSString *const FBDiffedImageKey;
  @param testClass The subclass of FBSnapshotTestCase that is using this controller.
  @returns An instance of FBSnapshotTestController.
  */
-- (instancetype)initWithTestClass:(Class)testClass;
+- (instancetype)initWithTestClass:(Class)testClass testCase:(XCTestCase *)testCase;
 
 /**
  Performs the comparison of the layer.

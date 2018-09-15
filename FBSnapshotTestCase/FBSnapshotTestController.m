@@ -28,16 +28,23 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
     FBTestSnapshotFileNameTypeFailedTestDiff,
 };
 
+@interface FBSnapshotTestController ()
+
+@property (nonatomic) XCTestCase *testCase;
+
+@end
+
 @implementation FBSnapshotTestController {
     NSFileManager *_fileManager;
 }
 
 #pragma mark - Initializers
 
-- (instancetype)initWithTestClass:(Class)testClass;
+- (instancetype)initWithTestClass:(Class)testClass testCase:(XCTestCase *)testCase
 {
     if (self = [super init]) {
         _folderName = NSStringFromClass(testClass);
+        _testCase = testCase;
         _deviceAgnostic = NO;
         _agnosticOptions = FBSnapshotTestCaseAgnosticOptionNone;
 
@@ -141,6 +148,9 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
                                         FBCapturedImageKey : image,
                                         FBDiffedImageKey : [referenceImage fb_diffWithImage:image],
                                     }];
+        
+        XCTAttachment *attachment = [XCTAttachment attachmentWithImage:image];
+        [self.testCase addAttachment:attachment];
     }
     return NO;
 }

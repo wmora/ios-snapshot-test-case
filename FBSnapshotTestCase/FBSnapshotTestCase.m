@@ -19,7 +19,7 @@
 - (void)setUp
 {
     [super setUp];
-    _snapshotController = [[FBSnapshotTestController alloc] initWithTestClass:[self class]];
+    _snapshotController = [[FBSnapshotTestController alloc] initWithTestClass:[self class] testCase:self];
 }
 
 - (void)tearDown
