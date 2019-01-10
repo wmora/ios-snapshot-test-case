@@ -102,15 +102,41 @@
     UIImage *testImage = [self _bundledImageNamed:@"square_with_pixel" type:@"png"];
     XCTAssertNotNil(testImage);
 
+    FBSnapshotTestCaseAgnosticOption options = FBSnapshotTestCaseAgnosticOptionDevice;
+  
     id testClass = nil;
     FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:testClass];
-    [controller setDeviceAgnostic:YES];
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    [controller setAgnosticOptions:options];
+#pragma GCC diagnostic pop
     [controller setReferenceImagesDirectory:@"/dev/null/"];
     NSError *error = nil;
-    SEL selector = @selector(isDeviceAgnostic);
+    SEL selector = @selector(agnosticOptions);
     [controller referenceImageForSelector:selector identifier:@"" error:&error];
     XCTAssertNotNil(error);
-    NSString *deviceAgnosticReferencePath = FBDeviceAgnosticNormalizedFileName(NSStringFromSelector(selector));
+    NSString *deviceAgnosticReferencePath = FBDeviceAgnosticNormalizedFileNameFromOption(NSStringFromSelector(selector), options);
+    XCTAssertTrue([(NSString *)[error.userInfo objectForKey:FBReferenceImageFilePathKey] containsString:deviceAgnosticReferencePath]);
+}
+
+- (void)testFailedImageWithFileNameOptionShouldHaveModelOnName
+{
+    UIImage *referenceImage = [self _bundledImageNamed:@"square" type:@"png"];
+    XCTAssertNotNil(referenceImage);
+    UIImage *testImage = [self _bundledImageNamed:@"square_with_pixel" type:@"png"];
+    XCTAssertNotNil(testImage);
+    
+    FBSnapshotTestCaseFileNameIncludeOption options = FBSnapshotTestCaseFileNameIncludeOptionDevice;
+    
+    id testClass = nil;
+    FBSnapshotTestController *controller = [[FBSnapshotTestController alloc] initWithTestClass:testClass];
+    [controller setFileNameOptions:options];
+    [controller setReferenceImagesDirectory:@"/dev/null/"];
+    NSError *error = nil;
+    SEL selector = @selector(agnosticOptions);
+    [controller referenceImageForSelector:selector identifier:@"" error:&error];
+    XCTAssertNotNil(error);
+    NSString *deviceAgnosticReferencePath = FBFileNameIncludeNormalizedFileNameFromOption(NSStringFromSelector(selector), options);
     XCTAssertTrue([(NSString *)[error.userInfo objectForKey:FBReferenceImageFilePathKey] containsString:deviceAgnosticReferencePath]);
 }
 

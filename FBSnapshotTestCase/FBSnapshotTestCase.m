@@ -39,17 +39,6 @@
     _snapshotController.recordMode = recordMode;
 }
 
-- (BOOL)isDeviceAgnostic
-{
-    return _snapshotController.deviceAgnostic;
-}
-
-- (void)setDeviceAgnostic:(BOOL)deviceAgnostic
-{
-    NSAssert1(_snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
-    _snapshotController.deviceAgnostic = deviceAgnostic;
-}
-
 - (FBSnapshotTestCaseAgnosticOption)agnosticOptions
 {
     return _snapshotController.agnosticOptions;
@@ -59,6 +48,17 @@
 {
     NSAssert1(_snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
     _snapshotController.agnosticOptions = agnosticOptions;
+}
+
+- (FBSnapshotTestCaseFileNameIncludeOption)fileNameOptions
+{
+    return _snapshotController.fileNameOptions;
+}
+
+- (void)setFileNameOptions:(FBSnapshotTestCaseFileNameIncludeOption)fileNameOptions
+{
+    NSAssert1(_snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
+    _snapshotController.fileNameOptions = fileNameOptions;
 }
 
 - (BOOL)usesDrawViewHierarchyInRect

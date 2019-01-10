@@ -137,21 +137,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readwrite, nonatomic, assign) BOOL recordMode;
 
 /**
- When @c YES appends the name of the device model and OS to the snapshot file name.
- The default value is @c NO.
- */
-@property (readwrite, nonatomic, assign, getter=isDeviceAgnostic) BOOL deviceAgnostic DEPRECATED_MSG_ATTRIBUTE("Use agnosticOptions instead. deviceAgnostic will be removed in a future version of iOS Snapshot Test Case.");
-
-/**
  When set, allows fine-grained control over how agnostic you want the file names to be.
 
  Allows you to combine which agnostic options you want in your snapshot file names.
 
  The default value is FBSnapshotTestCaseAgnosticOptionNone.
-
- @attention If deviceAgnostic is YES, this bitmask is ignored. deviceAgnostic will be deprecated in a future version of FBSnapshotTestCase.
+ 
+ @attention If fileNameOptions is set to something other than FBSnapshotTestCaseFileNameIncludeOptionNone, this bitmask is ignored. agnosticOptions will be deprecated in a future version of FBSnapshotTestCase.
  */
-@property (readwrite, nonatomic, assign) FBSnapshotTestCaseAgnosticOption agnosticOptions;
+@property (readwrite, nonatomic, assign) FBSnapshotTestCaseAgnosticOption agnosticOptions DEPRECATED_MSG_ATTRIBUTE("Use fileNameOptions instead. agnosticOptions will be removed in a future major version of iOS Snapshot Test Case.");
+
+/**
+ When set, allows fine-grained control over what you want the file names to include.
+ 
+ Allows you to combine which device or simulator specific details you want in your snapshot file names.
+
+ The default value is FBSnapshotTestCaseFileNameIncludeOptionNone. 
+ */
+
+@property (readwrite, nonatomic, assign) FBSnapshotTestCaseFileNameIncludeOption fileNameOptions;
 
 /**
  Overrides the folder name in which the snapshot is going to be saved.

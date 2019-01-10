@@ -38,8 +38,8 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 {
     if (self = [super init]) {
         _folderName = NSStringFromClass(testClass);
-        _deviceAgnostic = NO;
         _agnosticOptions = FBSnapshotTestCaseAgnosticOptionNone;
+        _fileNameOptions = FBSnapshotTestCaseFileNameIncludeOptionNone;
 
         _fileManager = [[NSFileManager alloc] init];
     }
@@ -256,13 +256,18 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
     if (0 < identifier.length) {
         fileName = [fileName stringByAppendingFormat:@"_%@", identifier];
     }
-
+  
+    /* While we support both temporarily, we default to preferring fileNameOptions */
+    BOOL noFileNameOption = (self.fileNameOptions & FBSnapshotTestCaseFileNameIncludeOptionNone) == FBSnapshotTestCaseFileNameIncludeOptionNone;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     BOOL noAgnosticOption = (self.agnosticOptions & FBSnapshotTestCaseAgnosticOptionNone) == FBSnapshotTestCaseAgnosticOptionNone;
-    if (self.isDeviceAgnostic) {
-        fileName = FBDeviceAgnosticNormalizedFileName(fileName);
+    if (!noFileNameOption) {
+      fileName = FBFileNameIncludeNormalizedFileNameFromOption(fileName, self.fileNameOptions);
     } else if (!noAgnosticOption) {
         fileName = FBDeviceAgnosticNormalizedFileNameFromOption(fileName, self.agnosticOptions);
     }
+#pragma GCC diagnostic pop
 
     if ([[UIScreen mainScreen] scale] > 1) {
         fileName = [fileName stringByAppendingFormat:@"@%.fx", [[UIScreen mainScreen] scale]];
